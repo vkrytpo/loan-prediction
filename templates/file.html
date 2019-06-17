@@ -1,0 +1,74 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+
+
+
+<html lang="en">
+<head>
+  <title>Loan Prediction Model</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h1 style='text-align:center;'>  Loan Prediction Model</h1>
+<div class="container">
+  <form  id='predict_form' name='predict_form' action='' method='POST'>
+<div class='row'>
+ <h4 style='text-align:center;text-transform:capitalize;color:{% if not  res %}red{%else%}green{%endif%};'>{% if res != 0 %}{% if not  res %}not a {% endif %} potential  applicant  for loan {% endif%}</h4>
+  <h1>
+        <a href='/train' style="vertical-align:top;"class="btn btn-default">Train model</a> 
+	<button id='submit' type="submit" style='float:right;' class="btn btn-default">Submit</button>
+  </h1>
+    {% csrf_token %}
+    {% for item in  txt_item %}
+    <div class="col-md-6 form-group">
+      <label for="text">{{item}}:</label>
+      <input type="number"  class="form-control" id="{{item}}" placeholder="Enter {{item}}" value='12' name="{{item}}">
+    </div>
+    {% endfor %}
+    
+
+    {% for key, value  in suff_label.items %}	
+	<div class="col-md-6 form-group">
+             <label for="sel1">{{key}}</label>
+             <select class="form-control"name='{{key}}' id={{key}} id="sel1">
+	     {%for input in value %}
+                    <option value='{{forloop.counter}}'>{{input}}</option>
+	     {% endfor %}
+             </select>
+         </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
+
+
+<!-- scripts for dynamic loading .. -->
+
+
+<script>
+$(document).ready(function(){	
+	$("select").change(function(){
+		$('#predict_form').submit();
+    	});
+	$('input').on('input',function(e){
+		console.log('waiting for input ');
+		setTimeout(function(){
+			console.log('submiting form');
+			document.predict_form.submit.click();
+			}, 1000);		
+	    });
+	
+   });
+{% if res != 0 %}
+	{% for key,value in form.items %}
+		document.getElementById('{{key}}').value='{{value}}';
+	{% endfor %}
+{% endif %}
+</script>
+
